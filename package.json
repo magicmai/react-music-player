@@ -1,0 +1,16 @@
+{
+  "name": "react-music-player",
+  "version": "1.0.0",
+  "description": "music player by react",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "webpack",
+    "react",
+    "music-player"
+  ],
+  "author": "Magic",
+  "license": "MIT"
+}
