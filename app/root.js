@@ -1,21 +1,23 @@
 import React from 'react';
-import Header from './components/header';
-import Progress from './components/progress';
+import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 
-let duration = null;
-class Root extends React.Component {
+import Header from './components/header';
+import Player from './page/player';
+import MusicList from './page/musiclist';
+import { MUSIC_LIST } from './config/musiclist';
+
+class Root  extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			progress: '-',
+			currentMusicItem: MUSIC_LIST[0],
+			musiclist: MUSIC_LIST
 		}
-
-		this.progressChangehandler = this.progressChangehandler.bind(this);
 	}
 
 	componentDidMount() {
 		$('#player').jPlayer({
-			ready: function () {
+			ready: function() {
 				$(this).jPlayer('setMedia', {
 					mp3: 'http://oj4t8z2d5.bkt.clouddn.com/%E9%AD%94%E9%AC%BC%E4%B8%AD%E7%9A%84%E5%A4%A9%E4%BD%BF.mp3'
 				}).jPlayer('play');
@@ -23,30 +25,25 @@ class Root extends React.Component {
 			supplied: 'mp3',
 			vmode: 'window'
 		});
-		$('#player').bind($.jPlayer.event.timeupdate, (e) => {
-			duration = e.jPlayer.status.duration;
-			this.setState({
-				progress: e.jPlayer.status.currentPercentAbsolute
-			});
-		});
-	}
-
-	componentWillUnmount() {
-		$('#player').unbind($.jPlayer.event.timeupdate);
-	}
-
-	progressChangehandler(progress) {
-		$('#player').jPlayer('play', duration * progress);
 	}
 
 	render() {
+		const Home = () => {
+			return <Player currentMusicItem={this.state.currentMusicItem} />
+		};
+		const List = () => {
+			return <MusicList 
+				currentMusicItem={this.state.currentMusicItem} 
+				musiclist={this.state.musiclist} />
+		};
 		return (
-			<div>
-				<Header /> 
-				<Progress progress={this.state.progress} 
-						  onProgressChange={this.progressChangehandler} 
-						  barColor="#ff0000" />
-			</div>
+			<Router>
+        		<div>
+          			<Header/>
+					<Route exact path="/" component={Home}/>
+					<Route path="/list" component={List}/>
+        		</div>
+      		</Router>
 		);
 	}
 }
